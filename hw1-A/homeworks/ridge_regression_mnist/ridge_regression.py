@@ -1,4 +1,5 @@
 import numpy as np
+import scipy
 
 from utils import load_dataset, problem
 
@@ -9,7 +10,6 @@ def train(x: np.ndarray, y: np.ndarray, _lambda: float) -> np.ndarray:
     Should use observations (`x`), targets (`y`) and regularization parameter (`_lambda`)
     to train a weight matrix $$\\hat{W}$$.
 
-
     Args:
         x (np.ndarray): observations represented as `(n, d)` matrix.
             n is number of observations, d is number of features.
@@ -17,14 +17,15 @@ def train(x: np.ndarray, y: np.ndarray, _lambda: float) -> np.ndarray:
             n is number of observations, k is number of classes.
         _lambda (float): parameter for ridge regularization.
 
-    Raises:
-        NotImplementedError: When problem is not attempted.
-
     Returns:
         np.ndarray: weight matrix of shape `(d, k)`
             which minimizes Regularized Squared Error on `x` and `y` with hyperparameter `_lambda`.
     """
-    raise NotImplementedError("Your Code Goes Here")
+    # Create regularization matrix
+    regularizer = _lambda * np.eye(np.shape(x)[1])
+
+    # Calculate and return the regularized least squares objective
+    return scipy.linalg.solve(x.T @ x + regularizer,  x.T @ y)
 
 
 @problem.tag("hw1-A")
@@ -44,7 +45,11 @@ def predict(x: np.ndarray, w: np.ndarray) -> np.ndarray:
     Returns:
         np.ndarray: predictions matrix of shape `(n,)` or `(n, 1)`.
     """
-    raise NotImplementedError("Your Code Goes Here")
+    # Estimate attractiveness of each alternative
+    a = w.T @ x.T
+
+    # Find and return most attractive alternative for each observation
+    return np.argmax(a, axis = 0)
 
 
 @problem.tag("hw1-A")
@@ -72,7 +77,12 @@ def one_hot(y: np.ndarray, num_classes: int) -> np.ndarray:
         ]
         ```
     """
-    raise NotImplementedError("Your Code Goes Here")
+    y_ = np.zeros((len(y), np.max(y) + 1))
+
+    for i in range(len(y)):
+        y_[i, y[i]] = 1
+
+    return y_
 
 
 def main():

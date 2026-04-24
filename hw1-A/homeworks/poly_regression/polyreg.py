@@ -164,7 +164,7 @@ def learningCurve(
     f = PolynomialRegression(degree, reg_lambda)
 
     # fill in errorTrain and errorTest arrays
-    for i in range(n):
+    for i in range(1, n):
         f.fit(Xtrain[0:(i + 1)], Ytrain[0:(i + 1)])
         errorTrain[i] = mean_squared_error(f.predict(Xtrain)[0:(i + 1)], Ytrain[0:(i + 1)])
         errorTest[i] = mean_squared_error(f.predict(Xtest), Ytest)
